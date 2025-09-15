@@ -1,0 +1,435 @@
+<html>
+<head>
+    <title>Project 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077cc;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077cc;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row .image-container {
+            text-align: center;
+            flex: 1 1 30%;
+            max-width: 30%;
+        }
+
+        .image-row img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .summary-image-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .summary-image-container img {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;   /* prevents it from becoming a full-block that overflows */
+            border-radius: 8px;
+        }
+        p a {
+            color: #0077cc;
+            text-decoration: underline;
+            font-weight: normal;
+            display: inline;
+            background: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        /* Button-style links */
+        a.button-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            background: #0077cc;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            background: #005fa3;
+        }
+
+        @media (max-width: 768px) {
+            .image-row .image-container {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+    <!-- For Math Formating -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Colorizing the Prokudin-Gorskii photo collection</h1>
+        <h2 style="text-align: center; color: #0077cc; font-size: 20px; font-weight: normal; margin-top: 0;">Project 1</h2>
+ 
+        <section>   
+            <h2>Project Overview</h2>
+            <p>
+                <a href="https://en.wikipedia.org/wiki/Sergey_Prokudin-Gorsky"> Sergei Mikhailovich Prokudin-Gorskii</a>                 
+                was a photographer who traveled across Russia capturing pictures using red, green,
+                and blue (RGB) filters on a glass plates. His RBG glass plate negatives survived and were purchased by Library of Congress (LoC) 
+                in 1948. The LoC recently digitized the negatives and made them available <a href="https://www.loc.gov/collections/prokudin-gorskii/?st=grid"> online.</a>
+            </p>
+
+            <p> 
+                The goal of this project is to extract the red, green, blue channels from the digitized images, align these 3 color channels
+                to produce a single color image.
+            </p>
+
+            <div class="summary-image-container">
+                <img src="./summary_pic.png" alt="Project Summary">
+            </div>
+        </section>
+
+        <section>
+            <h2 style="margin-bottom: 5px;">Single-Scale Alignment</h2>
+            <h3 style="text-align: center; color: #0077cc; font-size: 20px; font-weight: normal; margin-top: 0;">
+                Low Resolution Images
+            </h3>
+            
+            <p>
+                One way to align the color channels is by shifting them along the x and y axes and finding the displacement that best matches the reference channel. Implementation steps:
+            </p>
+            <ol>
+                <li>Separate the glass negative into red, green, and blue channels.</li>
+                <li>Fix one channel (e.g., Blue) and search a displacement range [-15, 15] for the other channels.</li>
+                <li>Select the displacements that best align the channels, using image similarity metrics.</li>
+            </ol>
+            
+            <h4 style="text-align: center;"> Image Alignment Metrics</h4>
+            <p>
+                There are several metrics we can use to evaluate the similarity between two images. In this project, I tried the Euclidian distance (L2 Norm) and Normalized 
+                Cross-Correlation (NCC).
+            </p>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: center; margin-top: 20px;">
+                <!-- L2 Norm Column -->
+                <div style="flex: 1 1 400px; max-width: 450px; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <p>
+                        <strong>Euclidian distance (L2 Norm)</strong> measures the pixel-to-pixel squared difference between images. In simple terms, it tells us how &ldquo;far apart&rdquo; two images are in 
+                        terms of their pixel intensities&mdash;the smaller the value, the more alike the images.
+                    </p>
+                    <p style="text-align: center; font-style: italic;">
+                        \[
+                        L_2(Img_1, Img_2) = \sqrt{ \sum_{x,y} ( Img_1(x,y) - Img_2(x,y) )^2 }
+                        \]
+                    </p>
+                </div>
+            
+                <!-- NCC Column -->
+                <div style="flex: 1 1 400px; max-width: 450px; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <p>
+                        <strong>Normalized Cross-Correlation (NCC)</strong> is a dot product between two normalized image vectors. Normalizing the image vectors makes the dot product insensitive to
+                         brightness or contrast differences. The resulting NCC value ranges from -1 to 1, where 1 indicates a perfect match, 0 indicates no correlation, and -1 indicates perfect negative correlation.
+                    </p>
+                    <p style="text-align: center; font-style: italic;">
+                        \[
+                        \text{NCC}(Img_1, Img_2) = \frac{Img_1}{\|Img_1\|} \cdot \frac{Img_2}{\|Img_2\|}
+                        \]
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                These are the results of single-scale alignment on low-resolution pixels. Using NCC produced better alignment than the Euclidean distance because the normalized vectors are insensitive to 
+                raw pixel intensity differences. 
+            </p>
+
+            <div class="image-row">
+                <div class="image-container">
+                    <img src="./aligned_photos/low_res/cathedral_aligned.png" alt="Aligned Cathedral">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (5,2) <br>
+                        Red offset: (12,3)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/low_res/monastery_aligned.png" alt="Aligned Monastery">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (-3, 2) <br>
+                        Red offset: (3, 2)
+                    </p>
+                </div>
+                <div class="image-container">
+                    <img src="./aligned_photos/low_res/tobolsk_aligned.png" alt="Aligned Tobolsk 3">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (3,3) <br>
+                        Red offset: (6,3)
+                    </p>
+                </div>
+            </div>
+            <p>
+                <strong>Implementation takeaway</strong>: 
+                When shifting an image, I added zero padding to maintain the original dimensions of a channel. However, with multiple channels, 
+                the padded borders overlapped and skewed the NCC metric as the algorithm tried to match the channel's borders rather than the image content. 
+                To address this, I computed NCC using only the inner 60% of the channel's pixels, which significantly improved the alignment results.
+            </p>
+
+        </section>
+
+        <section>
+            <h2 style="margin-bottom: 5px;">Multi-Scale Pyramid Alignment</h2>
+            <h3 style="text-align: center; color: #0077cc; font-size: 20px; font-weight: normal; margin-top: 0;">
+                High Resolution Images
+            </h3>
+
+
+            <p>While exhustively searching for the right displacement vector works for low resolution images, 
+                this alignment stragety is expensive for high resolution images where the pixel displacement
+                can be too large. An alternative strategy is to try break this problem into smaller chunks that we can solve by using an 
+                <strong>Image Pyramid</strong>. Image Pyramid is a coarse-to-fine technique that represents the same image at multiple resolutions, 
+                arranged from low to high resolution. Each level of the pyramid is a smaller/downsampled version of the previous level. 
+            </p>
+
+            <h4 style="text-align: center;"> Implementation</h4>
+            <p>
+                Starting with the full resolution image, 
+                I used cv2.resize to reduce each level by half. The resulting pyramid allows processing from low to high resolution, with the smallest level being the lowest resolution.
+                Here is an example of the image pyramid for one of the larger image: 
+            </p>
+        
+            <!-- Pyramid example -->
+            <div class="summary-image-container">
+                <img src="./Pyramid_example.png" alt="Image Pyramid Example" style="max-width: 70%; height: auto;">
+            </div>
+
+            <p>
+                After building the pyramid, I began aligning the channels at the lowest resolution, similar to the single-scale approach. The estimated displacement from this level was 
+                used as a starting guess for the next higher level, where I searched only within a small window of [-5, 5] around this guess. Unlike the single-scale method, which 
+                exhaustively searches the full range, this coarse-to-fine strategy leverages lower-resolution estimates to save computation while progressively refining alignment at 
+                higher resolutions.
+            </p>
+
+            <p>
+                <strong>Normalized Cross-Correlation vs Euclidean distance</strong>: 
+                I ran the multi-scale image pyramid using both NCC and L2 Norm. NCC performed better because it compares normalized image vectors, while L2 Norm measures 
+                absolute pixel differences. As a result, if two images are similar but one is brighter, L2 Norm is more sensitive to this change, whereas NCC remains largely unaffected.
+            </p>
+
+            <h4 style="text-align: center;"> Alignment Challenge</h4>
+            <p>
+                While NCC and the image pyramid worked for most images, it was challenging to align the emir.tif photo because the RGB channels had significantly different 
+                pixel intensities. This was the result running NCC with image pyramid implementation
+            </p>
+            <div class="summary-image-container">
+                <img src="./emir_before.png" alt="Emir.tif" style="max-width: 50%; height: auto;">
+            </div>
+
+            <h4 style="text-align: center;"> Edge Feature Detection</h4>
+            <p>
+                To overcome this challenge, I applied a Sobel edge detection filter to all the channels, allowing the alignment to focus on the image edges 
+                rather than raw pixel intensities. This approach improved the results, as the channels were aligned based on structural patterns instead of
+                 intensity differences.
+            </p>
+            <div class="summary-image-container">
+                <img src="./sobel_filters_example.png" alt="Emir.tif" style="max-width: 100%; height: auto;">
+            </div>
+
+            <h4 style="text-align: center;"> Results!</h4>
+            <div class="image-row">
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/icon_aligned_new.png" alt="Aligned Icon">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (42, 17) <br>
+                        Red offset: (90, 22)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/harvesters_aligned.png" alt="Aligned Harvesters">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (60,17) <br>
+                        Red offset: (123,14)
+                    </p>
+                </div>
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/church_aligned.png" alt="Aligned church">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (25, 4) <br>
+                        Red offset: (59, -4) 
+                    </p>
+                </div>
+            </div>
+
+            <div class="image-row">
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/italil_aligned.png" alt="Aligned Italil">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (39, 22) <br>
+                        Red offset: (77, 36)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/emir_aligned.png" alt="Aligned Emir">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (50, 23) <br> 
+                        Red offset: (106, 40)
+                    </p>
+                </div>  
+
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/lugano_aligned.png" alt="Aligned Lugano">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (41, -16) <br>
+                        Red offset: (92, -29)
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="image-row">
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/melons_aligned.png" alt="Aligned Melons">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (81, 10) <br>
+                        Red offset: (177, 13)
+                    </p>
+                </div>
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/self_portrait_aligned.png" alt="Aligned Self-Portrait">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (78, 29) <br>
+                        Red offset: (175, 37)
+                    </p>
+                </div> 
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/siren_aligned.png" alt="Aligned Siren">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (48, -6) <br>
+                        Red offset: (96, -24)
+                    </p>
+                </div>
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/three_generations_aligned.png" alt="Aligned Three Generations">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (55, 17) <br> 
+                        Red offset: (114, 11)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/high_res/lastochikino_aligned.png" alt="Aligned Lastochikino">
+                    <p style="font-size: 14px; color: #555;">
+                        Green offset: (-3, -2)  <br>
+                        Red offset: (76, -9)
+                    </p>
+                </div>
+            </div>
+
+            <h2>More Images from Prokudin-Gorskii Collection!</h2>
+            <div class="image-row">
+                <div class="image-container">
+                    <img src="./aligned_photos/additional_photos/Monrepos_aligned.png" alt="Aligned Monrepos">
+                    <p style="font-size: 14px; color: #555;">
+                        Monrepos <br>
+                        Green offset: (5, 0)  <br>
+                        Red offset: (19, 0)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/additional_photos/Kostroma_aligned.png" alt="Aligned Kostroma">
+                    <p style="font-size: 14px; color: #555;">
+                        Kostroma <br>
+                        Green offset: (4, 2)  <br>
+                        Red offset: (9, 5)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/additional_photos/Train_aligned.png" alt="Aligned Train">
+                    <p style="font-size: 14px; color: #555;">
+                        Train <br>
+                        Green offset: (4, 1)  <br>
+                        Red offset: (8, 4)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/additional_photos/aligned_cotton_textiles.png" alt="Aligned Cotton Textile">
+                    <p style="font-size: 14px; color: #555;">
+                        Cotton Textile <br>
+                        Green offset: (4, 1)  <br>
+                        Red offset: (8, 4)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/additional_photos/women_traditional_aligned.png" alt="Aligned Women">
+                    <p style="font-size: 14px; color: #555;">
+                        Women in traditional clothing <br>
+                        Green offset: (1, 5)  <br>
+                        Red offset: (4, 7)
+                    </p>
+                </div>
+
+                <div class="image-container">
+                    <img src="./aligned_photos/additional_photos/forest_aligned.png" alt="Aligned Forest">
+                    <p style="font-size: 14px; color: #555;">
+                        Forest <br>
+                        Green offset: (2, -4)  <br>
+                        Red offset: (7, 1)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div style="text-align: center;">
+            <a href="../index.html" class="button-link">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
