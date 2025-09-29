@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            display: flex; /* allow sidebar + content layout */
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row img {
+            max-width: 48%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .image-row img {
+                max-width: 100%;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 160px;
+            background: #ffffff;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar h3 {
+            color: #0077cc;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #0077cc;
+            color: #fff;
+        }
+
+        /* Content area */
+        .container {
+            width: 1300px;
+            margin-left: 370px; /* leave space for sidebar */
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077cc;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077cc;
+            font-size: 20px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #0077cc;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row img {
+            max-width: 48%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .single-media {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .single-media img {
+            max-width: 80%;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        p {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        a.button-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            background: #0077cc;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a.button-link:hover {
+            background: #005fa3;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: center;
+                box-shadow: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .container {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <h3>Sections</h3>
+        <a href="#part1">Part 1: Fun with Filters</a>
+        <a href="#part2">Part 2: Fun with Frequencies</a>
+    </nav>
+
+    <!-- Content -->
+    <div class="container">
+        <h1>Fun with Filters and Frequencies!</h1>
+        <h2>Project 2</h2>
+
+        <!-- Section 1 -->
+        <section id="part1">
+            <h2>Part 1: Fun with Filters</h2>
+            <p>
+                This part builds intuition about 2D convolutions and filtering. 
+            </p>
+
+            <h3 class="center-text"> Part 1.1: Convolutions from Scratch!</h3>
+                Convolution implementation using <strong>4 nested loops</strong> and <strong>2 nested loops</strong>. This includes zero-padding 
+                the original image to preserve its dimensions after a convolution. The number of padding added
+                is the size of the kernel radius.
+
+
+                In this implementation, convolution is computed as:
+
+                $$
+                \text{Convolution(image, kernel)} = \text{Cross-Correlation(image, flipped kernel)}
+                $$
+
+                The kernel is flipped horizontally and vertically and then we take the cross-correlation with the 
+                image to compute the convolution. These give the same results as the built-in convolution function 
+                <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.convolve2d.html" style="color: inherit;"> 
+                    scipy.signal.convolve2d</a>.
+            
+                <div class="image-row" style="display: flex; gap: 100px; justify-content: center; flex-wrap: nowrap; margin-top: 30px;">
+                    <div style="text-align: center; flex: 0 0 auto;">
+                        <img src="./media/four_loop_conv.png" alt="4 Nested For Loop implementation" style="border-radius: 10px; max-width: 400px;">
+                        <p style="margin-top: 8px; font-size: 14px; color: #555;">4 Nested For Loop implementation</p>
+                    </div>
+    
+                    <div style="text-align: center; flex: 0 0 auto;">
+                        <img src="./media/two_loop_conv.png" alt="2 Nested For Loop implementation" style="border-radius: 10px; max-width: 400px;">
+                        <p style="margin-top: 8px; font-size: 14px; color: #555;">2 Nested For Loop implementation</p>
+                    </div>
+                </div>
+
+                Let's try applying a 9x9 box filter on selfie I took during the SF Half!
+                
+                Box filter replaces each pixel with the average of its neighboring pixels inside a square window.
+
+                For instance, a 3x3 boc filter kernel looks like: 
+                \[
+                    \frac{1}{9}
+                    \begin{bmatrix}
+                    1 & 1 & 1 \\
+                    1 & 1 & 1 \\
+                    1 & 1 & 1
+                    \end{bmatrix}
+                \]
+
+                The effect is a smoothing/blurring of the image, as this filter reduces the noise and detail of an image. 
+
+                <div class="image-row" style="display: flex; gap: 100px; justify-content: center; flex-wrap: nowrap; margin-top: 30px;">
+                    <div style="text-align: center; flex: 0 0 auto;">
+                        <img src="./media/before_box_color.png" alt="Before Box Filter Convolution" style="border-radius: 10px; max-width: 400px;">
+                        <p style="margin-top: 8px; font-size: 14px; color: #555;">Before Box Filter Convolution</p>
+                    </div>
+    
+                    <div style="text-align: center; flex: 0 0 auto;">
+                        <img src="./media/after_box_color.png" alt="After Box Filter Convolution" style="border-radius: 10px; max-width: 400px;">
+                        <p style="margin-top: 8px; font-size: 14px; color: #555;">After Box Filter Convolution</p>
+                    </div>
+                </div>
+
+                Let's try taking the x and y partial derivatives by convolving the photo with finite difference filters \(D_x\) and \(D_y\).
+                The finite difference filters are:
+                $$
+                D_x = 
+                \begin{bmatrix}
+                1 & -1
+                \end{bmatrix}, \quad
+                D_y = 
+                \begin{bmatrix}
+                1 \\ -1
+                \end{bmatrix}
+                $$
+
+                <div class="image-row" style="display: flex; gap: 100px; justify-content: center; flex-wrap: nowrap; margin-top: 30px;">
+                    <div style="text-align: center; flex: 0 0 auto;">
+                        <img src="./media/dx_result_selfie.png" alt="x partial derivative" style="border-radius: 10px; max-width: 400px;">
+                        <p style="margin-top: 8px; font-size: 14px; color: #555;">\(D_x\) partial derivative</p>
+                    </div>
+    
+                    <div style="text-align: center; flex: 0 0 auto;">
+                        <img src="./media/dy_result_selfie.png" alt="y partial derivative" style="border-radius: 10px; max-width: 400px;">
+                        <p style="margin-top: 8px; font-size: 14px; color: #555;">\(D_y\) partial derivative</p>
+                    </div>
+                </div>
+
+            <strong>What can you use for this section?</strong>
+            <ul>
+                <li>Zero-padded the image with <code>np.pad</code> based on kernel radius: <code>(kernel_h - 1)//2</code>, <code>(kernel_w - 1)//2</code>.</li>
+                <li>Initialized the output with <code>np.zeros</code>.</li>
+                <li>Flipped the kernel using <code>np.flip</code> and applied convolution with two loops over image patches.</li>
+                <li>Computed each patch's dot product with <code>np.sum</code> of element-wise products.</li>
+            </ul>
+
+
+            <h3 class="center-text"> Part 1.2: Finite Difference Operator</h3>
+            Let's compute the \(D_x\) and \(D_y\) derivatives with the "cameraman" image.
+            <div style="text-align: center;">
+                <img src="./media/camera_man_derivatives.png" 
+                    alt="Cameraman derivatives" 
+                    style="border-radius: 10px; max-width: 1200px;">
+            </div>
+            <ul>
+                <li>
+                    \( \frac{\partial \text{img}}{\partial x} \) computes the partial derivative with respect to x by convolving the image with the \(D_x\) filter. 
+                    This convolution highlights the <strong>vertical edges</strong> in the image.
+                </li>
+
+                <li>
+                    \( \frac{\partial \text{img}}{\partial y} \) computes the partial derivative with respect to y by convolving the image with the \(D_y\) filter. 
+                    This convolution highlights the <strong>horizontal edges</strong> in the image.
+                </li>
+
+                <li>
+
+                    The gradient points in the direction of the most rapid increase in intensity.  
+
+                    The <strong>gradient magnitude image</strong> combines both horizontal (\(G_x\)) and vertical (\(G_y\)) intensity changes at each pixel:
+
+                   $$
+                   ||\nabla \text{img}|| = \sqrt{\left(\frac{\partial \text{img}}{\partial x}\right)^2 + \left(\frac{\partial \text{img}}{\partial y}\right)^2}
+                   $$
+
+                    As a result, the <strong>edge strength is represented by the gradient magnitude</strong>. Edges correspond to regions where the image intensity changes rapidly, so the gradient magnitude naturally highlights these areas.
+                </li>
+
+                <li>
+                    The gradient magnitude image has varying intensities for gray pixels, capturing both weak and strong edges. To improve this, 
+                    we can create an <strong>edge image</strong> by <i>binarizing</i> the gradient magnitude image so that each pixel is either 0 or 1, making edge detection simpler and more robust.
+                </li>
+            </ul>
+
+            While we used threshold 0.1, we can try experimenting with different thresholds to see which one produces a better edge image. 
+            <div style="text-align: center;">
+                <img src="./media/range_threshold_1.2.png" 
+                    alt="Range of threshold results for the Edge Image"
+                    style="border-radius: 10px; max-width: 900px; margin-top: 30px;">
+                    <p style="margin-top: 8px; font-size: 14px; color: #555;">Effect of Threshold Values on the Gradient Magnitude
+                    </p>
+            </div>
+            There is a clear tradeoff between capturing all edges and suppressing noise. If the threshold is too low, the edge image includes noisy edges. 
+            Conversely, if the threshold is too high, important edges and image details may be lost.
+
+            <h3 class="center-text"> Part 1.3: Derivative of Gaussian (DoG) Filter</h3>
+            A better approach would be to first smooth the image and then compute the gradient; this helps reduce noise while preserving meaningful edges, such as those visible in the grass region.
+            We can smooth the image by applying a Gaussian filter and then repeat the previous steps to compute the x and y partial derivatives, the gradient magnitude, 
+            and the edge image on the smoothed image.
+            <div style="text-align: center;">
+                <img src="./media/cameraman_smooth_derivatives.png" 
+                    alt="Derivatives for the smoothen cameraman"
+                    style="border-radius: 10px; max-width: 1200px;">
+                    <p style="font-size: 14px; color: #555;">Partial Derivatives on the Smoothen Cameraman Image</p>
+            </div>
+            
+            <strong>What differences do you see?</strong>
+            <ul>
+                <li>
+                    After applying the Gaussian filter, the edges become more clearly defined, because Gaussian filter reduces noise while preserving the main structures 
+                    in the image.
+                </li>
+
+                <li>
+                    The noise, such as small edge responses in the grass region, is reduced while most of the important edges remain visible. For example, if you compare threshold 0.05 without 
+                    Gaussian smoothing to threshold 0.05 with Gaussian smoothing, the latter retains stronger, clearer edges, while containing a less noisy edges.
+                </li>
+
+                <li>
+                    Although the Gaussian kernel is not perfect&mdash;removing noise too aggressively may also weaken or eliminate some real edges&mdash;overall it produces a cleaner result: stronger 
+                    edge signals are retained while unwanted noise is reduced.
+                </li>
+            </ul>
+
+            <div style="margin-bottom: 10px;">We can combine these convolutions into a single step.</div>
+
+            <div style="display: flex; gap: 50px;">
+
+                <div style="flex: 1;">
+                    <strong>Before: Two separate convolutions</strong>
+                    <ol>
+                        <li>
+                            Smooth the image with a Gaussian filter: <span style="font-family: monospace; background: #f0f0f0; padding: 2px 4px;">I * G</span>
+                        </li>
+                        <li>
+                            Compute derivatives using finite difference operators:<br>
+                            <span style="font-family: monospace; background: #f0f0f0; padding: 2px 4px;">(I * G) * D<sub>x</sub>, (I * G) * D<sub>y</sub></span>
+                        </li>
+                    </ol>
+                    This required two separate convolution steps for each derivative.
+                </div>
+            
+                <div style="flex: 1;">
+                    <strong>After: Single convolution per derivative</strong>
+                    <ol>
+                        <li>
+                            Combine the Gaussian and derivative operators first:<br>
+                            <span style="font-family: monospace; background: #f0f0f0; padding: 2px 4px;">DoG<sub>x</sub> = G * D<sub>x</sub>, DoG<sub>y</sub> = G * D<sub>y</sub></span>
+                        </li>
+                        <li>
+                            Apply directly to the image:<br>
+                            <span style="font-family: monospace; background: #f0f0f0; padding: 2px 4px;">I * DoG<sub>x</sub>, I * DoG<sub>y</sub></span>
+                        </li>
+                        <li>
+                            <em>Why it works:</em> Convolution is associative:<br>
+                            <span style="font-family: monospace; background: #f0f0f0; padding: 2px 4px;">(I * G) * D<sub>x</sub> = I * (G * D<sub>x</sub>)</span>
+                        </li>
+                    </ol>
+                </div>
+            
+            </div>
+            
+
+            This reduces computation and achieves the same result with a single convolution per derivative.
+        </section> 
+
+        
+        <section id="part2">
+            <h2>Part 2: Fun with Frequencies!</h2>
+            <h3 class="center-text"> Part 2.1: Image "Sharpening"</h3>
+            This section explores image sharpening by enhancing high-frequency details using <strong>unsharp masking</strong>.
+            <ul>
+                <li>Apply a <strong>Gaussian filter</strong> to extract the <strong>low-frequency</strong> components.</li>
+                <li>Subtract the blurred image from the original to isolate the <strong>high-frequency details</strong>.</li>
+                <li>Add these high frequencies back to enhance edges&mdash;this is the core of unsharp masking.</li>
+                <li>Demonstrate the effect on several images, including sharpening a deliberately blurred image.</li>
+                <li>Compare the original and sharpened images to assess the improvement in clarity and detail.</li>
+            </ul>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Taj Mahal Sharpened</p>
+                <img src="./media/sharpening/taj_sharpen.png" alt="Taj Mahal Sharpened" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Flower Sharpened</p>
+                <img src="./media/sharpening/flower_sharpen.png" alt="Flower Sharpened" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Lion Sharpened</p>
+                <img src="./media/sharpening/lion_sharpen.png" alt="Lion Sharpened" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Bruno Mars Sharpened</p>
+                <img src="./media/sharpening/bruno_mars_sharpen.png" alt="Bruno Mars Sharpened" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Cheetah Sharpened</p>
+                <img src="./media/sharpening/cheetah_sharpen.png" alt="Cheetah Sharpened" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Decoration Sharpened</p>
+                <img src="./media/sharpening/sharpen_indoor_flower.png" alt="Decoration Sharpened" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+        <strong>Evaluation</strong>: let's pick a sharp image, blur it and then try to sharpen it again. Here, <strong>k</strong> is the scaling factor that controls the strength of the sharpening. A higher <strong>k</strong> increases edge enhancement, while a lower <strong>k</strong> produces a subtler effect.
+
+        <div style="text-align: center; font-family: 'Times New Roman', serif; font-size: 16px;">
+            I<sub>sharpened</sub> = I<sub>original</sub> + k &middot; (I<sub>original</sub> - I<sub>blurred</sub>)
+        </div>
+
+        <div style="text-align: center; flex: 0 0 auto;">
+            <img src="./media/sharpening/sharpen_results.png" alt="Sharpening Evaluation on SF photo" style="border-radius: 10px; max-width: 1200px;">
+            <p style="font-size: 14px; color: #555;">Sharpening Evaluation on SF photo</p>
+        </div>
+
+        <strong>Observation</strong>: applying unsharp masking after Gaussian blur improves clarity, but the original image was not restored completely. 
+        The sharpened image is visually clearer than the blurred one, but some textures and exact pixel values are not identical.
+        There could be several reasons for this:
+        <ul>
+            <li><strong>Smoothing loses information:</strong> Gaussian blur averages pixel values, attenuating fine details and high-frequency components, which cannot be fully recovered.</li>
+            <li><strong>Sharpening is approximate:</strong> Unsharp masking enhances the high frequencies it extracts, but cannot perfectly reconstruct the original image.</li>
+            <li><strong>Practical limitations:</strong> Rounding, clipping, and frequency loss mean the sharpened image differs slightly from the original, even if the gaussian filter size and sigma are the same.</li>
+        </ul>
+
+        <h3 class="center-text"> Part 2.2: Hybrid Images</h3>
+        <div>The goal of this section is to create <strong>hybrid images</strong> following the approach described in the SIGGRAPH 2006 
+            <a href="https://web.archive.org/web/20070315210101/http://cvcl.mit.edu/hybrid/OlivaTorralb_Hybrid_Siggraph06.pdf" target="_blank" style="color: inherit;">paper</a> 
+            by Oliva, Torralba, and Schyns. Hybrid images are special static images that appear differently depending on how far away you view them.</div>
+
+
+        <div>The key idea is: <strong>high-frequency details</strong> dominate perception up close, while at a distance, only the <strong>low-frequency 
+            (smooth) components</strong> are visible. By blending the high-frequency part of one image with the low-frequency part of another, we can 
+            produce a single image that conveys <strong>different interpretations depending on viewing distance</strong>.</div>
+
+            
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/hybrid_img/dr_house_hybrid_final.png" alt="Dr. House Hybrid Result" style="border-radius: 10px; max-width: 1000px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/hybrid_img/beast_final_hybrid.png" alt="Beast Hybrid Result" style="border-radius: 10px; max-width: 1000px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/hybrid_img/avatar_milo_hybrid_final.png" alt="Avatar and my cat Milo Hybrid Result" style="border-radius: 10px; max-width: 1000px;">
+            </div>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/hybrid_img/me_milo_hybrid_final.png" alt="Me and my cat Milo Hybrid Result" style="border-radius: 10px; max-width: 1000px;">
+            </div>
+
+            Frequency analysis
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/result_hybrid_finals.png" alt="Me and my cat Milo Hybrid Result" style="border-radius: 10px; max-width: 1000px;">
+            </div>
+
+            <h3 class="center-text"> Part 2.3: Gaussian and Laplacian Stacks</h3>
+            Gaussian and Laplacian Stack on Avatar. 
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/sharpening/gaussian_laplacian_avatar.png" alt="Me and my cat Milo Hybrid Result" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            This is a Gaussian and Laplacian Stack on a photo of mona lisa and buildings. 
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/sharpening/test2_gaussian_laplacian.png" alt="Me and my cat Milo Hybrid Result" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            This is a Gaussian and Laplacian Stack used for blending an orange and apple a.k.a oraple! 
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/sharpening/orapple_gaussian_laplacian.png" alt="Me and my cat Milo Hybrid Result" style="border-radius: 10px; max-width: 800px;">
+            </div>
+        
+            <h3 class="center-text"> Multiresolution Blending</h3>
+            <h4 class="center-text"> Blending Ironman with Tony Stark</h4>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/sharpening/iron_man_final_pic.png" alt="Iron Man" style="border-radius: 10px; max-width: 600px;">
+            </div>
+            Gaussian and Laplacian Stack
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/iron_man_final_stack.png" alt="Iron Man" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+
+            <h4 class="center-text"> Blending the Spiderman</h4>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/spiderman_result_final.png" alt="Iron Man" style="border-radius: 10px; max-width: 600px;">
+            </div>
+            Gaussian and Laplacian Stack
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/spiderman_final_gl.png" alt="Iron Man" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <h4 class="center-text"> Blending Door and Universe</h4>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/door_universe_pic.png" alt="Iron Man" style="border-radius: 10px; max-width: 800px;">
+            </div>
+
+            <h4 class="center-text"> Blending Billie Eilish and Ocean - her song Ocean Eyes!</h4>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/billie_elish_final.png" alt="Iron Man" style="border-radius: 10px; max-width: 700px;">
+            </div>
+
+            <h4 class="center-text"> Blending Eilie Tower and Starry Night</h4>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/result_final_starry.png" alt="Iron Man" style="border-radius: 10px; max-width: 800px;">
+            </div>
+            Gaussian and Laplacian Stack
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/stack_irregualr.png" alt="Iron Man" style="border-radius: 10px; max-width: 500px;">
+            </div>
+            
+        </section>
+    </div>
+</body>
+</html>
