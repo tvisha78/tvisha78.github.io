@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            display: flex; /* allow sidebar + content layout */
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row img {
+            max-width: 48%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .image-row img {
+                max-width: 100%;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 160px;
+            background: #ffffff;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar h3 {
+            color: #0077cc;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #0077cc;
+            color: #fff;
+        }
+
+        /* Content area */
+        .container {
+            width: 1300px;
+            margin-left: 370px; /* leave space for sidebar */
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077cc;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077cc;
+            font-size: 20px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #0077cc;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row img {
+            max-width: 48%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .single-media {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .single-media img {
+            max-width: 80%;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        p {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        a.button-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            background: #0077cc;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a.button-link:hover {
+            background: #005fa3;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: center;
+                box-shadow: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .container {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <h3>Sections</h3>
+        <a href="#part1">Part 3A: Image Warping and Mosaicing</a>
+        <a href="#part2">Part 3B: Feature Matching for Autostitching</a>
+    </nav>
+
+    <!-- Content -->
+    <div class="container">
+        <h1>[Auto]Stitching Photo Mosaics</h1>
+        <h2>Project 3</h2>
+        <h4 class="center-text"> The goal of this project is to stitch together many photographs to create larger composite images. The project is divided 
+            into two sections. 
+        </h4>
+
+        <!-- Section 1 -->
+        <section id="part1">
+            <h2>Part 3A: Image Warping and Mosaicing</h2>
+            <p>
+                This part goes into the cool application of image mosaicing. We'll take two or more photographs and create an image mosaic by registering, 
+                projective warping, resampling, and compositing them. Along the way, we'll learn to compute homographies, and to use them to warp images.
+            </p>
+
+            <h3 class="center-text"> Part A.1: Capture and digitize pictures</h3>
+            To find correspondences between images, it is important to ensure that the images are related by a <strong>projective/perspective</strong> transformation. 
+            One common way to achieve this is by fixing the <strong>center of projection (COP)</strong> and rotating the camera while capturing the photos. 
+            This approach ensures that all images contain the same information about the light rays, which is crucial when stitching them together.
+
+            The diagram below illustrates why keeping the same COP is important for accurate image stitching.
+            <div class="image-row" style="display: flex; gap: 100px; justify-content: center; flex-wrap: nowrap; margin-top: 30px;">
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <!-- Image 1  -->
+                    <img src="./media/COP_same_explain.png" alt="Images WITH the same Center of Projection" style="border-radius: 10px; max-width: 400px;">
+                    <div style="margin-top: 10px; font-size: 14px; color: #555; background-color: #f9f9f9; text-align: left; max-width: 520px;">
+                        <p style="text-align: center; font-size: 14px;">
+                            <strong>Images WITH the same Center of Projection</strong><br>
+                        </p>
+                        <i>COP</i>  Center of Projection<br>
+                        <i>PP1</i>  Projection Plane 1 (the image plane)<br>
+                        <i>PP2</i>  Projection Plane 2<br><br>
+
+                        We capture the second image (PP2) such that it shares the same COP as the first image (PP1). Notice geometrically
+                        that because both images share the same COP, there are light rays that intersect BOTH PP1 and PP2 (denoted by the red dots). 
+                        The points where the SAME light ray intersects both the images are <strong>correspondences</strong>. In order words, 
+                        correspondences are matching points in image planes that come from the same 3D world. 
+                    </div>
+                </div>
+
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <!-- Image 2  -->
+                    <img src="./media/COP_dif_explain.png" alt="Images WITHOUT the same Center of Projection" style="border-radius: 10px; max-width: 400px;">
+                    <div style="margin-top: 10px; font-size: 14px; color: #555; background-color: #f9f9f9; text-align: left; max-width: 520px;">
+                        <p style="text-align: center; font-size: 14px;">
+                            <strong>Images WITHOUT the same Center of Projection</strong><br>
+                        </p>
+                        <i>COP1 and COP2</i> Two Center of Projections<br>
+                        <i>PP1</i>  Projection Plane 1 <br>
+                        <i>PP2</i>  Projection Plane 2<br><br>
+
+                        When two images (PP1 and PP2) are captured from different COPs (eg. by moving the camera between shots) the light rays hitting each image are different.
+                        Even though the rays from each image intersect on a synthetic projection plane (the yellow dot), tracing them back shows they correspond to different 3D points 
+                        in the scene (red dot for PP1, green dot for PP2). Even though the rays intersect, these points are not true correspondences. Note that the surface is non-planar, 
+                        which affects the rays captured by both images.
+                    </div>
+                </div>
+            </div>
+
+            Keeping this in mind, here are couple images from different scenes I captured, while trying to make sure that they share the same COPs by fixing the camera position (no translation)
+            and rotating the camera. I also tried to make sure that the consecutive images have enough <strong>overlapping regions</strong> between them, so we have enough corresponding points.
+
+            <h4 class="center-text"> Scene 1 - Balcony</h4>
+
+            <div class="image-row">
+                <!-- image 1  -->            
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <img src="./media/balcony/balcony1.png" alt="Balcony Picture 1" style="border-radius: 10px; max-width: 500px;">
+                    <p style="text-align: center; font-size: 14px;">Image 1</p>
+                </div>
+
+                <!-- image 2 -->              
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <img src="./media/balcony/balcony2.png" alt="Balcony Picture 2" style="border-radius: 10px; max-width: 500px;">
+                    <p style="text-align: center; font-size: 14px;">Image 2</p>
+                </div>
+            </div>
+
+            <h4 class="center-text"> Scene 2 - Kitchen</h4>
+
+            <div class="image-row">
+                <!-- image 1  -->            
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <img src="./media/kitchen/kitchen1_reg.png" alt="Kitchen 1" style="border-radius: 10px; max-width: 350px;">
+                    <p style="text-align: center; font-size: 14px;">Image 1</p>
+                </div>
+
+                <!-- image 2 -->              
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <img src="./media/kitchen/kitchen2_reg.png" alt="Kitchen 2" style="border-radius: 10px; max-width: 350px;">
+                    <p style="text-align: center; font-size: 14px;">Image 2</p>
+                </div>
+            </div>
+
+            <h4 class="center-text"> Scene 3 - Patio</h4>
+
+            <div class="image-row">
+                <!-- image 1  -->            
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <img src="./media/patio1.png" alt="Patio 1" style="border-radius: 10px; max-width: 350px;">
+                    <p style="text-align: center; font-size: 14px;">Image 1</p>
+                </div>
+
+                <!-- image 2 -->              
+                <div style="text-align: center; flex: 0 0 auto;">
+                    <img src="./media/patio2.png" alt="Patio 2" style="border-radius: 10px; max-width: 350px;">
+                    <p style="text-align: center; font-size: 14px;">Image 2</p>
+                </div>
+            </div>
+
+            <h3 class="center-text"> Part A.2: Recover Homographies</h3>
+            Before we can warp the images into alignment, we need to recover the parameters of the transformation between each pair. As described 
+            below, the <strong>transformation is a homography: p'=Hp</strong>, where H is a 3x3 matrix with 8 degrees of freedom (the lower right is a scaling factor is 
+            is set to 1). 
+            \[
+                H =
+                \begin{bmatrix}
+                a & b & c \\
+                d & e & f \\
+                g & h & 1
+                \end{bmatrix}
+            \]
+
+            The homography transformation is defined as
+            \[
+                p' = Hp
+            \]
+
+            \[
+                \begin{bmatrix}
+                p_x' \\
+                p_y' \\
+                w'
+                \end{bmatrix} = 
+                \begin{bmatrix}
+                a & b & c \\
+                d & e & f \\
+                g & h & 1
+                \end{bmatrix}
+                \begin{bmatrix}
+                p_x \\
+                p_y \\
+                w
+                \end{bmatrix}
+            \]
+
+            In order to find the parameters of homography matrix H, we need to
+            <ol>
+                <li>Find corresponding points between two images
+                    <ul>
+                        <li>
+                            Since this is a homography matrix and we have 8 unknowns, we need at least 4 corresponding points (each 
+                            point gives two equations for the x and y). However, to make our solution more robust to noise, we will 
+                            use more than 4 points and build a overconstrained system 
+                        </li>
+                        <li>
+                            In this section, we are <i>MANUALLY</i> establishing the point correspondences using a mouse-clicking interface
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    Set up a linear system of n equations
+                    <ul>
+                        <li>We can solve the overdetermined system using least squares</li>
+                    </ul>
+                </li>
+                <li>
+                    Solve the linear system of equations and compute H = computeH(im1_pts, im2_pts)
+                    <ul>
+                        <li>im1_pts and im2_pts are nx2 matrices of the corresponding points</li>
+                    </ul>
+                </li>
+            </ol>
+
+            We can set up the system of equations using the correspondences. Here the w is simply the scaling factor, so x' and y'
+            are divided by w to get back the coordinates in 2D. Multiplying the matrices out, we can get
+
+            \[
+            \frac{p_x'}{w'} = \frac{a p_x + b p_y + c}{g p_x + h p_y + 1}
+            \quad{and}\quad
+            \frac{p_y'}{w'} = \frac{d p_x + e p_y + f}{g p_x + h p_y + 1}
+            \]
+
+            We can isolate the unknowns and arrange the least squares equation for one point as 
+            \[
+            Ah = b
+            \]
+
+            \[
+            \begin{bmatrix}
+                x_1 & y_1 & 1 & 0 & 0 & 0 & -xx' & -yx' \\
+                0 & 0 & 0 & x_1 & y_1 & 1 & -xy' & -yy' \\
+                \end{bmatrix}
+                \begin{bmatrix}
+                a \\
+                b \\
+                c \\
+                d \\
+                e \\
+                f \\
+                g \\
+                h 
+                \end{bmatrix} = 
+                \begin{bmatrix}
+                x_1'\\
+                y_1'
+                \end{bmatrix}
+             \] 
+             
+             To find the correspondences, I tried to choose edges that would be easy to pick between the two images. 
+             The correspondances are color coordinated.
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/correspondances_visual_patio.png" alt="Patio correspondances" style="border-radius: 10px; max-width: 950px;">
+                <p style="text-align: center; font-size: 14px;">Correspondances Visualized</p>
+             </div> 
+
+             After solving the least squares, the recovered homography matrix for the images above was 
+             H =
+             \begin{bmatrix}
+             1.71975557 & 0.0188707081 & -286.822878 \\
+             0.481829623 & 1.59312629 & -177.934747 \\
+             0.00167859687 & 0.000371402023 & 1
+             \end{bmatrix}
+
+
+             <h3 class="center-text"> Part A.3: Warp the Images</h3>
+             <h5 class="center-text"> Photo Frame Rectification</h5>
+             I took a picture of a photo frame from an angle, which makes it appear as a trapezoid instead of a square. 
+             This happens because of perspective projection: objects farther from the center of projection appear smaller, 
+             and as a result, parallel lines in the real world no longer appear parallel in the image. Now let's 
+             rectify/"unwrap" this image to get a front facing photo frame that looks square.
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/photo_frame_a2.png" alt="Photo Frame Rectification" style="border-radius: 10px; max-width: 1200px;">
+             </div> 
+
+             <h5 class="center-text"> Kitchen Cabinets Rectification</h5>
+             Here's a rectification using the kichen cabinets. The alpa mask shows the opacity of the pixels and explicitly shows 
+             which pixels are part of an image, and the pixels that are undefined/part of the background. 
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/kitchen_a2.png" alt="Kitchen Photo Rectification" style="border-radius: 10px; max-width: 1200px;">
+             </div> 
+
+             <h4 class="center-text"> Comparison: Nearest Neighbor vs. Bilinear Interpolation</h4>
+             <ul>
+                <li>
+                  Nearest Neighbor interpolation is computationally simpler and faster, 
+                  but it often produces visible artifacts such as blocky textures and jagged edges, 
+                  especially along diagonals or when the image is scaled significantly.
+                </li>
+                <li>
+                  Bilinear interpolation is slightly slower since it averages values from four neighbors, 
+                  but it produces smoother transitions and more visually natural results, 
+                  making it better suited for image warping and stitching tasks.
+                </li>
+              </ul>
+
+              Implementation details: 
+              <ul>
+                <li>
+                  When we warp with a homography, the output image may not have the same size as the input. 
+                  If we just assume that the rectified image has the same shape as the original image, 
+                  parts of the warped image will get cut out. Instead, we can predict the output size to avoid cropping:
+                  <ul>
+                    <li>Take the corners of the input image.</li>
+                    <li>Apply the homography to these corners to get their coordinates in the warped space.</li>
+                    <li>Find the bounding box that covers the transformed corners.</li>
+                  </ul>
+                </li>
+                <li>
+                  We can apply an alpha channel to handle undefined pixels. 
+                  If we only have the RGB channels, undefined pixels are filled with black by default, 
+                  which is misleading because we cannot tell whether black pixels are real content or empty background. 
+                  By adding an alpha channel, we explicitly store opacity and clearly separate content from background.
+                </li>
+              </ul>
+
+             <h3 class="center-text">A.4: Blend the Images into a Mosaic</h3>
+             To stitch the images, I first computed correspondences and used them to estimate a homography transformation (H matrix). Since warping 
+             with a homography changes the geometry, the warped image may extend beyond the original size and even into negative coordinates. To handle this, 
+             I transformed the input image's corners with H, found the bounding box of those transformed corners, and used it to predict the correct output size. 
+             Finally, I applied an offset based on the bounding box minimums to shift everything into non-negative coordinates, ensuring that both the warped image 
+             and the reference image could be aligned and placed properly on the same canvas without cropping.
+
+             <h5 class="center-text"> Balcony Image Mosaic</h5>
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/balcony_stiched_white.png" alt="Balcony Image Mosaic" style="border-radius: 10px; max-width: 700px;">
+             </div> 
+
+             <h5 class="center-text"> Kitchen Image Mosaic</h5>
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/kitchenm_result.png" alt="Kitchen Image Mosaic" style="border-radius: 10px; max-width: 600px;">
+             </div> 
+
+             <h5 class="center-text"> Patio Image Mosaic</h5>
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/patio_result.png" alt="Patio Image Mosaic" style="border-radius: 10px; max-width: 700px;">
+             </div> 
+        </section> 
+
+        
+        <section id="part2">
+            <h2>Part 3B: Feature Matching for Autostitching</h2>
+            <h3 class="center-text"> Placemenholder</h3>
+            This section explores ... 
+            <ul>
+                <li>item1</li>
+                <li>item2</li>
+                <li>...</li>
+            </ul>
+
+            <div style="text-align: center; flex: 0 0 auto;">
+                <p style="font-size: 14px; color: #555;">Temporary Placeholder</p>
+                <img src="./media/sharpening/taj_sharpen.png" alt="Temporary Placeholder" style="border-radius: 10px; max-width: 800px;">
+            </div>
+        </section>
+    </div>
+</body>
+</html>
