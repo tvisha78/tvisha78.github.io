@@ -293,13 +293,13 @@
             <div class="image-row">
                 <!-- image 1  -->            
                 <div style="text-align: center; flex: 0 0 auto;">
-                    <img src="./media/patio1.png" alt="Patio 1" style="border-radius: 10px; max-width: 350px;">
+                    <img src="./media/patio/patio1.png" alt="Patio 1" style="border-radius: 10px; max-width: 350px;">
                     <p style="text-align: center; font-size: 14px;">Image 1</p>
                 </div>
 
                 <!-- image 2 -->              
                 <div style="text-align: center; flex: 0 0 auto;">
-                    <img src="./media/patio2.png" alt="Patio 2" style="border-radius: 10px; max-width: 350px;">
+                    <img src="./media/patio/patio2.png" alt="Patio 2" style="border-radius: 10px; max-width: 350px;">
                     <p style="text-align: center; font-size: 14px;">Image 2</p>
                 </div>
             </div>
@@ -407,17 +407,20 @@
              To find the correspondences, I tried to choose edges that would be easy to pick between the two images. 
              The correspondances are color coordinated.
              <div style="text-align: center; flex: 0 0 auto;">
-                <img src="./media/correspondances_visual_patio.png" alt="Patio correspondances" style="border-radius: 10px; max-width: 950px;">
+                <img src="./media/coordinates_color.png" alt="Balcony correspondances" style="border-radius: 10px; max-width: 950px;">
                 <p style="text-align: center; font-size: 14px;">Correspondances Visualized</p>
              </div> 
 
              After solving the least squares, the recovered homography matrix for the images above was 
-             H =
+
+             \[
+             H = 
              \begin{bmatrix}
-             1.71975557 & 0.0188707081 & -286.822878 \\
-             0.481829623 & 1.59312629 & -177.934747 \\
-             0.00167859687 & 0.000371402023 & 1
+             2.12114409 & 0.03477176 & -594.870436 \\
+             0.380436377 & 1.72216329 & -171.641533 \\
+             0.001332330 & 1.6372e{-7} & 1
              \end{bmatrix}
+             \]
 
 
              <h3 class="center-text"> Part A.3: Warp the Images</h3>
@@ -427,7 +430,7 @@
              and as a result, parallel lines in the real world no longer appear parallel in the image. Now let's 
              rectify/"unwrap" this image to get a front facing photo frame that looks square.
              <div style="text-align: center; flex: 0 0 auto;">
-                <img src="./media/photo_frame_a2.png" alt="Photo Frame Rectification" style="border-radius: 10px; max-width: 1200px;">
+                <img src="./media/photo_framea2.png" alt="Photo Frame Rectification" style="border-radius: 10px; max-width: 1200px;">
              </div> 
 
              <h5 class="center-text"> Kitchen Cabinets Rectification</h5>
@@ -471,44 +474,201 @@
                 </li>
               </ul>
 
-             <h3 class="center-text">A.4: Blend the Images into a Mosaic</h3>
-             To stitch the images, I first computed correspondences and used them to estimate a homography transformation (H matrix). Since warping 
+             <p style="font-size: 16px;">
+            To stitch the images, I first computed correspondences and used them to estimate a homography transformation (H matrix). Since warping 
              with a homography changes the geometry, the warped image may extend beyond the original size and even into negative coordinates. To handle this, 
-             I transformed the input image's corners with H, found the bounding box of those transformed corners, and used it to predict the correct output size. 
-             Finally, I applied an offset based on the bounding box minimums to shift everything into non-negative coordinates, ensuring that both the warped image 
-             and the reference image could be aligned and placed properly on the same canvas without cropping.
+             I transformed the input image's corners with H, found the bounding box of those transformed corners, and used it to predict the correct output size.
+             I applied an offset based on the bounding box minimums to shift everything into non-negative coordinates, ensuring that both the warped image 
+             and the reference image could be aligned and placed properly on the same canvas without cropping. 
+            </p>
+             
+            <p style="font-size: 16px;">
+                When overlapping two images, edge artifacts often appear along the seam. To blend them seamlessly, I use
+                <strong>weighted averaging (per-pixel blending)</strong> with <em>distance-based weights</em>.
+
+                I first compute the <strong>distance transform</strong> for each image's alpha mask: this gives, for every pixel,
+                its distance to the nearest background (empty) pixel. Intuitively, pixels that are <strong>farther from edges</strong>
+                should contribute more to the blend, while pixels <strong>near edges</strong> should contribute less.
+
+                In the overlapping region, I normalize these distances to obtain weights
+                (so the two weights sum to 1 at each pixel), then apply a per-pixel weighted average of the RGB values from both images.
+                Outside the overlap, each image is kept fully opaque. This gives blended mosaic. Let's walk through this process for 
+                one of the mosaic. 
+            </p>
+              
+             <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/full_process_a4.png" alt="Blending Process" style="border-radius: 10px; max-width: 1200px;">
+             </div>
 
              <h5 class="center-text"> Balcony Image Mosaic</h5>
              <div style="text-align: center; flex: 0 0 auto;">
-                <img src="./media/balcony_stiched_white.png" alt="Balcony Image Mosaic" style="border-radius: 10px; max-width: 700px;">
-             </div> 
+                <img src="./media/results_manual/balcony_mosaic.png" alt="Balcony Image Mosaic" style="border-radius: 10px; max-width: 750px;">
+             </div>
 
              <h5 class="center-text"> Kitchen Image Mosaic</h5>
              <div style="text-align: center; flex: 0 0 auto;">
-                <img src="./media/kitchenm_result.png" alt="Kitchen Image Mosaic" style="border-radius: 10px; max-width: 600px;">
+                <img src="./media/results_manual/kitchen_stiched.png" alt="Kitchen Image Mosaic" style="border-radius: 10px; max-width: 600px;">
              </div> 
 
              <h5 class="center-text"> Patio Image Mosaic</h5>
              <div style="text-align: center; flex: 0 0 auto;">
-                <img src="./media/patio_result.png" alt="Patio Image Mosaic" style="border-radius: 10px; max-width: 700px;">
+                <img src="./media/results_manual/patio_stiched.png" alt="Patio Image Mosaic" style="border-radius: 10px; max-width: 600px;">
              </div> 
         </section> 
 
         
         <section id="part2">
             <h2>Part 3B: Feature Matching for Autostitching</h2>
-            <h3 class="center-text"> Placemenholder</h3>
-            This section explores ... 
-            <ul>
-                <li>item1</li>
-                <li>item2</li>
-                <li>...</li>
-            </ul>
+            The goal of this section is to create a system for automatically stitching images into a mosaic. A secondary goal is to learn how to read and implement a research paper.
 
-            <div style="text-align: center; flex: 0 0 auto;">
-                <p style="font-size: 14px; color: #555;">Temporary Placeholder</p>
-                <img src="./media/sharpening/taj_sharpen.png" alt="Temporary Placeholder" style="border-radius: 10px; max-width: 800px;">
+            <h3 class="center-text"> B.1: Harris Corner Detection</h3>
+
+            <div style="font-size: 16px; text-align: left;">
+                <p style="font-size: 16px;text-align: left;">
+                  We can use <strong>Harris corners</strong> to detect features in an image. The idea behind the Harris corner detector is that we want to easily recognize a point through a small window, 
+                  such that shifting this window in any direction causes a large change in intensity.
+                </p>
+                <ul style="text-align: left; margin-left: 25px;">
+                  <li>If the change occurs only in one direction (x or y), it indicates an edge.</li>
+                  <li>If there is little to no change in any direction, it indicates a flat region.</li>
+                  <li>If the intensity changes significantly in both directions, it indicates a corner.</li>
+                </ul>
+
+                The Harris Corner Detector identifies locations with strong intensity variation in both x and y directions: these points are considered corners that are robust to translation and rotation. 
+                The measure of corner response represents how strong or <em>corner-like</em> a point is in the image. It is defined as:
+
+                \[
+                R = \frac{\det(M)}{\text{trace}(M)}
+                \]
+
+                where M is the second moment matrix at each pixel: 
+                \[
+                M = 
+                \begin{bmatrix}
+                I_x^2 & I_xI_y \\
+                I_xI_y  &  I_y^2
+                \end{bmatrix}
+                \]
+
             </div>
+
+            <p style="font-size: 16px; text-align: left;">
+                However, as described in the <a href="https://cal-cs180.github.io/fa25/hw/proj3/Papers/MOPS.pdf" target="_blank"style="color: inherit;">Multi-Image Matching using Multi-Scale Oriented Patches</a> paper, 
+                one desirable quality is to select a subset of corners that have both a strong corner response and are spatially well distributed across the image. This is particularly useful for panorama applications, 
+                as the overlap between images could be small and thus we want well distributed feature points. To achieve this, we implement <strong>Adaptive Non-Maximal Suppression (ANMS)</strong>, where for each corner 
+                we find the minimum distance to the next stronger corner. Points that are very close to stronger ones get suppressed (small radius), points that are far from any stronger points are kept (large radius), 
+                and finally we select the top N corners with the largest suppression radii. This ensures that the resulting keypoints are both strong and evenly distributed across the image. Here I kept the 500 points for ANMS. 
+              </p>
+            
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/partB/balcony_b1.png" alt="Harris corners and ANMS" style="border-radius: 10px; max-width: 1200px;">
+            </div>
+
+            <h3 class="center-text"> B.2: Feature Descriptor Extraction</h3>
+            Now that we determined our interest points using Harris corners and ANMS, we need a way to extract the description around that corner, so that we can realiably match corners across overlapping images. 
+            A feature descriptor encodes how the image looks around a corner into a numerical vector. By comparing these descriptors between images, we can tell which corners represent the same real-world point despite 
+            changes in viewpoint or lighting. Based on the MOPS paper, the general steps to implement the feature descriptors are oulined below. 
+                <ol style="margin-left:22px;">
+                  <li>
+                    <strong>Apply Gaussian to the image before sampling</strong><br>
+                    This makes the patches less sensitive to the exact feature location. Intuitively, we sample pixels at a lower
+                    frequency than where the interest points are detected, which stabilizes the descriptor
+                  </li>
+                  <li>
+                    <strong>Extract a 40x40 window centered at each corner</strong>
+                  </li>
+                  <li>
+                    <strong>Subsample every 5 pixels to obtain an 8x8 patch</strong><br>
+                    To avoid aliasing, perform the sampling at a higher pyramid level (i.e., a more blurred image, so high-frequency
+                    details are already smoothed out) such that the effective sampling rate is approximately once per pixel
+                  </li>
+                  <li>
+                    <strong>Normalize the descriptor to remove bias/gain</strong><br>
+                    Bias/gain normalization makes the features invariant to affine changes in intensity (overall brightness and contrast)
+                  </li>
+                </ol> 
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/partB/descriptors_a2.png" alt="Feature Descriptors" style="border-radius: 10px; max-width: 1000px;">
+            </div>
+
+            <h3 class="center-text">B.3: Feature Matching</h3>
+            <div style="font-size:16px; text-align:left; line-height:1.5;">
+                <p style="font-size: 16px; text-align: left;">
+                  We can now use the feature descriptors to find pairs of features that look similar and are likely to be correspondences between images.
+                  To do this, I implemented the method described in the MOPS paper, performing feature matching with
+                  <em>Lowe's ratio</em> to select pairs that are most likely correct matches.
+                </p>
+              
+                <ul style="margin-left:22px;">
+                  <li><strong>Nearest neighbors:</strong> For each descriptor in Image&nbsp;1, find the two nearest neighbors in Image&nbsp;2 based on the Euclidean distance.</li>
+                  <li><strong>Lowe's ratio test:</strong> Compute the ratio <code>r = d<sub>1</sub> / d<sub>2</sub></code>, where <code>d<sub>1</sub></code> is the distance to the closest match and <code>d<sub>2</sub></code> is the distance to the second-closest match. Accept the match only if <code>r</code> is <em>less than</em> the threshold (i.e., the best match is significantly better than the second-best).</li>
+                  <li><strong>Threshold:</strong> I used a threshold of <code>0.4</code> (looking at Figure&nbsp;6b in the MOPS paper). A lower threshold means there is a larger difference between the best and second-best distances.</li>
+                </ul>
+              
+                <p style="font-size: 16px; text-align: left;">
+                  This procedure favors matches where the best candidate is much better than the next alternative, reducing outliers and improving the reliability and accuracy of the overall matching.
+                </p>
+              </div>
+            
+            <h5 class="center-text"> Balcony Image Feature Mapping</h5>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/partB/feature_correspondances.png" alt="Balcony Image Feature Mapping" style="border-radius: 10px; max-width: 1200px;">
+            </div>
+
+            <h5 class="center-text"> Patio Image Feature Mapping</h5>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/partB/patio_corres.png" alt="Patio Image Feature Mapping" style="border-radius: 10px; max-width: 850px;">
+            </div>
+            We can see there is an outlier in this feature mapping. Even with low threshold there can be outliers between the correspondances. The next section will go into 
+            dealing with these outliers while computing the homography.
+
+            <h5 class="center-text"> Kitchen Image Feature Mapping</h5>
+            <div style="text-align: center; flex: 0 0 auto;">
+                <img src="./media/partB/kitchen_correspondances.png" alt="Kitchen Image Feature Mapping" style="border-radius: 10px; max-width: 850px;">
+            </div>
+
+
+            <h3 class="center-text">B.4: RANSAC for Robust Homography</h3>
+            <div style="font-size:16px; text-align:left; line-height:1.5;">
+                <p style="font-size:16px; text-align:left;">
+                    I used the 4-point RANSAC algorithm to compute a robust homography between image pairs. This approach makes the homography 
+                    estimation resistant to incorrect matches and outliers, ensuring that the final transformation is based only on reliable 
+                    feature correspondences.
+                </p>
+                
+                <p style="font-size:16px; text-align:left; margin-top:8px;">
+                  <strong>RANSAC Loop</strong>
+                </p>
+                <ol style="margin-left:22px;">
+                  <li>Select <strong>four</strong> feature pairs at random</li>
+                  <li>Compute a candidate homography <code>H</code> from those 4 correspondences</li>
+                  <li>Classify inliers: Count all matches satisfying <code>dist(p', H p) &lt; error </code></li>
+                  <li>Track the model with the <strong>largest inlier set</strong> across iterations.</li>
+                  <li>Recompute a <em>least-squares</em> homography using <strong>all</strong> inliers from the best iteration.</li>
+                </ol>
+              
+                <p style="font-size:16px; text-align:left;">
+                  I used the <em>same blending techniques</em> from Part&nbsp;A (e.g., alpha masks / weighted averaging) to seamlessly merge overlapping regions after warping with the estimated homography.
+                </p>
+              </div>
+
+              <h5 class="center-text"> Balcony Image Mosaic</h5>
+              <div style="text-align: center; flex: 0 0 auto;">
+                  <img src="./media/partB/final_balcony.png" alt="Balcony Image Mosaic" style="border-radius: 10px; max-width: 900px;">
+              </div>
+  
+              <h5 class="center-text"> Patio Image Mosaic</h5>
+              <div style="text-align: center; flex: 0 0 auto;">
+                  <img src="./media/partB/final_patio.png" alt="Patio Image Mosaic" style="border-radius: 10px; max-width: 850px;">
+              </div>
+  
+              <h5 class="center-text"> Kitchen Image Mosaic</h5>
+              <div style="text-align: center; flex: 0 0 auto;">
+                  <img src="./media/partB/final_kitchen.png" alt="Kitchen Image Mosaic" style="border-radius: 10px; max-width: 850px;">
+              </div>
+              Manual and automatic stitching mosaics mostly produced similar results.
+                The noticeable difference was in the Balcony mosaic, likely because, in the manual version, the selected correspondences were clustered together, whereas ANMS distributes keypoints more evenly across the image.
+                As a result, the computed homography matrices could differ between the two methods.
         </section>
     </div>
 </body>
