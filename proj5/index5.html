@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project 5</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            display: flex; /* allow sidebar + content layout */
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row img {
+            max-width: 48%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .image-row img {
+                max-width: 100%;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 100px;
+            background: #ffffff;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sidebar h3 {
+            color: #0077cc;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 15px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #0077cc;
+            color: #fff;
+        }
+
+        /* Content area */
+        .container {
+            width: 1500px;
+            margin-left: 150px; /* leave space for sidebar */
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0077cc;
+            margin-bottom: 10px;
+            font-size: 36px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077cc;
+            font-size: 20px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 40px;
+        }
+
+        section {
+            margin-bottom: 80px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        section h2 {
+            color: #0077cc;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .image-row img {
+            max-width: 48%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .single-media {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .single-media img {
+            max-width: 80%;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        p {
+            font-size: 18px;
+            text-align: center;
+        }
+
+        a.button-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            background: #0077cc;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a.button-link:hover {
+            background: #005fa3;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: center;
+                box-shadow: none;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .container {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+    </style>
+
+    <style>
+    /* Only affects lists with this class */
+    .side-by-side-list {
+        display: flex;
+        gap: 20px; /* space between columns */
+        list-style-position: inside;
+        padding: 0;
+    }
+
+    .side-by-side-list li {
+        flex: 1; /* each takes equal width */
+        background: #f9f9f9;
+        border-radius: 10px;
+        padding: 16px;
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <h3>Sections</h3>
+        <a href="#partA">Part A: The Power of Diffusion Models!</a>
+        <a href="#partB">Part B: Flow Matching from Scratch!</a>
+    </nav>
+
+    <!-- Content -->
+    <div class="container">
+        <h1>Fun With Diffusion Models!</h1>
+        <h2>Project 5</h2>
+        <h4 class="center-text"> The goal of this project is to implement and deploy diffusion models for image generation.
+        </h4>
+
+        <!-- Part A -->
+        <section id="partA">
+            <h2>Part A: The Power of Diffusion Models!</h2>
+            <h3>Part 0: Setup</h3>
+            <p>
+                In this section, I explored how different text prompts and sampling hyperparameters
+                affect image generation using diffusion models. Below are the prompts I initially
+                created to generate prompt embeddings:
+            </p>
+        
+            <ul>
+                <li>a staircase that looks like a DNA helix</li>
+                <li>a DNA helix shaped like a staircase</li>
+                <li>an oil painting of people around a campfire</li>
+                <li>an oil painting of an old man</li>
+                <li>a lithograph of waterfalls</li>
+                <li>a lithograph of a skull</li>
+                <li>a high quality photo</li>
+                <li>a city skyline that looks like a circuit board</li>
+                <li>a circuit board shaped like a city skyline</li>
+                <li>a rocket ship made of clouds</li>
+                <li>clouds shaped like a rocket ship</li>
+            </ul>
+        
+            <p>
+                From this list, I selected three prompts for further experimentation:
+            </p>
+        
+            <ul>
+                <li><em>a city skyline that looks like a circuit board</em></li>
+                <li><em>a circuit board shaped like a city skyline</em></li>
+                <li><em>a staircase that looks like a DNA helix</em></li>
+            </ul>
+        
+            <p>
+                For each prompt, I experimented with four different values of
+                <code>num_inference_steps</code>: 20, 60, 100, and 200, while fixing the random seed to 100.
+            </p>
+        
+            <div class="single-media">
+                <img src="media/part0_img.png" alt="Effect of inference steps on generated images">
+                <p><em>Effect of varying the number of inference steps for different prompts.</em></p>
+            </div>
+        
+            <p>
+                I observed that there appears to be an optimal number of inference steps.
+                As the number of steps increases, the images initially gain more fine-grained
+                detail. For example, between 20 and 60 steps, the <em>staircase that looks like a DNA helix</em>
+                becomes more structured, with clearer helix-like patterns appearing along the railings.
+
+                However, when the number of steps is increased to 200, the image begins to overemphasize
+                local details at the expense of global structure. In this case, the staircase loses its
+                recognizable form and no longer clearly resembles either a staircase or a DNA helix.
+
+                A similar trend appears in the <em>city skyline that looks like a circuit board</em> prompt.
+                At lower step counts (around 20), the image preserves a strong city skyline structure while
+                subtly incorporating circuit-like details. As the number of steps increases, the model
+                increasingly prioritizes circuit features, eventually losing the visual identity of a city skyline.
+
+                Overall, when generating images designed to resemble visual anagrams, increasing the number
+                of inference steps improves detail up to a point. Beyond that point, the model tends to
+                overblend features from both concepts, causing the image to lose a coherent primary structure.
+
+
+            </p>
+        
+            <h3>Part 1: Sampling Loops</h3>
+        
+            <h3>1.1 Implementing the Forward Process</h3>
+            <p>
+                In the forward diffusion process, we start with a clean image \( x_0 \) and gradually add
+                Gaussian noise at each timestep. The parameter \( \bar{\alpha}_t \) represents how much of
+                the original signal remains at timestep \( t \). As \( t \) increases, \( \bar{\alpha}_t \)
+                decreases, and the image becomes increasingly noisy.
+            </p>
+        
+            <p>
+                The forward process is defined as:
+            </p>
+        
+            <p>
+                \[
+                q(x_t \mid x_0) = \mathcal{N}\left(x_t; \sqrt{\bar{\alpha}_t} x_0, (1 - \bar{\alpha}_t)\mathbf{I}\right)
+                \]
+            </p>
+        
+            <div class="single-media">
+                <img src="media/pat1.1_noise_camp.png" alt="Forward diffusion noise process">
+                <p><em>Visualization of the forward diffusion process over time.</em></p>
+            </div>
+        
+            <h3>1.2 Classical Denoising</h3>
+            <p>
+                To establish a baseline, I attempted to denoise the noisy images using classical
+                Gaussian blur filtering. This approach assumes that noise primarily consists of
+                high-frequency components, which can be reduced by averaging nearby pixels.
+            </p>
+        
+            <p>
+                I used a Gaussian kernel with size 5 and a standard deviation \( \sigma = 1.5 \).
+                However, this method performed poorly: although some noise was reduced, much of the
+                original image structure had already been destroyed by the diffusion process and
+                could not be recovered.
+            </p>
+        
+            <div class="single-media">
+                <img src="media/part1.2_noise.png" alt="Gaussian blur denoising results">
+                <p><em>Results of classical Gaussian blur denoising.</em></p>
+            </div>
+        
+            <h3>1.3 Implementing One-Step Denoising</h3>
+            <p>
+                In the next section, I implement a learned one-step denoising model that predicts
+                the noise added at each timestep. We can remove this noise at each time step to try to recover 
+                our original image.
+            </p>
+
+            <p>Forward process:</p>
+            <div>
+            \[
+            x_t = \sqrt{\bar{\alpha}_t}\,x_0 + \sqrt{1 - \bar{\alpha}_t}\,\epsilon,
+            \quad \epsilon \sim \mathcal{N}(0, I).
+            \]
+            </div>
+            
+            <p>
+                The UNet predicts the noise \( {\epsilon} \), so we can just solve for
+                \( x_0 \) to remove the noise:
+            </p>
+            
+            <div>
+            \[
+            \hat{x}_0 = \frac{x_t - \sqrt{1 - \bar{\alpha}_t}\,{\epsilon}}
+            {\sqrt{\bar{\alpha}_t}}.
+            \]
+            </div>
+
+            <div class="single-media">
+                <img src="media/pt1.3_noise.png" alt="One-Step Denoising">
+                <p><em>Results of One-Step Denoising</em></p>
+            </div>
+
+
+            <h3>1.4 Iterative Denoising</h3>
+
+            <p>
+                Instead of removing noise one tiny step at a time (e.g., over 1000 diffusion steps),
+                we can jump between timesteps using a formula that mixes the current noisy image
+                with an estimate of the clean image in the correct proportions.
+            </p>
+
+            <p>
+                In this setup, the first index corresponds to the noisiest image, while the final
+                index corresponds to the reconstructed clean image. Rather than denoising at every
+                single timestep, we use <em>strided timesteps</em> and perform denoising only at
+                those selected points.
+            </p>
+
+            <div class="single-media">
+                <img src="media/pt1.4_noise.png" alt="Iterative Denoising">
+                <p><em>Results of iterative denoising using strided timesteps.</em></p>
+            </div>
+
+            <p>
+                Iterative denoising was the method that kept the most detail compared to the one-step
+                estimate and Gaussian blur. It was able to preserve information about the sky and had
+                more detailed outlines of the trees compared to the one-step estimate.
+            </p>
+
+            <p>
+                However, it does seem to hallucinate the top of the Campanile and adds a flat surface. 
+                This makes sense, since during this process there is no reinforcement of
+                whether the model is choosing the correct prediction of the clean image. If this
+                estimate deviates from the true clean image, the subsequent steps will continue to
+                drift further from the original.
+            </p>
+
+            <h3>1.5 Diffusion Model Sampling</h3>
+
+            <p>
+                In the previous section, iterative denoising was used to recover a clean image from
+                a noisy input. Here, we instead use the same <code>iterative_denoise</code> procedure
+                to <em>generate entirely new images</em>.
+            </p>
+
+            <p>
+                Rather than starting from a clean image and adding noise, we begin directly from
+                random Gaussian noise and set <code>i_start = 0</code>, corresponding to the noisiest
+                timestep. As in the earlier experiments, this aligns with
+                <code> t=strided_timesteps[0] = 990</code>.
+            </p>
+
+            <p>
+                Below are several images sampled from pure noise using the prompt
+                <em>"a high quality photo"</em>.
+            </p>
+
+            <div class="single-media">
+                <img src="media/pt1.5_noise.png" alt="Diffusion Model Sampling">
+                <p><em>Images sampled from random noise using diffusion model sampling.</em></p>
+            </div>
+
+            So why does this work? Sampling begins from random noise, but the diffusion model has learned how noisy images evolve toward the data distribution. 
+            At each denoising step, the model predicts a direction that moves the sample toward higher-probability regions of the learned image manifold.
+            Repeatedly applying these guided denoising steps gradually removes noise and results in a coherent image, rather than a random trajectory.
+
+
+            <h3>1.6 Classifier-Free Guidance (CFG)</h3>
+
+            <p>
+                The images above were not the best, since some of them did not necessarily make sense.
+                To improve the results, we use Classifier-Free Diffusion Guidance (CFG).
+            </p>
+
+            <p>
+                In CFG, we compute both a conditional noise estimate conditioned on the prompt and an
+                unconditional noise estimate. The parameter \( \gamma \) controls the strength of the
+                guidance:
+            </p>
+
+            <div>
+            \[
+            \epsilon = \epsilon_u + \gamma (\epsilon_c - \epsilon_u)
+            \]
+            </div>
+
+            <p>
+                The difference between \( \epsilon_c \) and \( \epsilon_u \) is the guidance vector.
+                Intuitively, this guides \( \epsilon_u \) toward \( \epsilon_c \). The parameter
+                \( \gamma \) controls how strongly the unconditional estimate is influenced by the
+                conditional one. This can be thought of as injecting prompt-specific signal.
+            </p>
+
+            <p>
+                Here, we use <em>"a high quality photo"</em> as the conditional prompt embedding and an
+                empty string (<code>""</code>) as the unconditional prompt embedding.
+            </p>
+
+            <div class="single-media">
+                <img src="media/pt1.6_image_gen.png" alt="Classifier-Free Guidance Results">
+                <p><em>Image generation results using classifier-free guidance.</em></p>
+            </div>
+
+        
+            <h4>1.7 Image-to-Image Translation</h4>
+
+            <p>
+                One way to think about denoising is that it forces a noisy image back onto the
+                manifold of natural images. Here, we take the original Campanile image, add a small
+                amount of noise, and force it back onto the image manifold without any conditioning.
+            </p>
+            
+            <p>
+                Effectively, this produces an image that is similar to the Campanile, assuming the
+                noise level is low enough. We add noise to the Campanile image and then apply the
+                <code>iterative_denoise_cfg</code> function using starting indices
+                <code>[1, 3, 5, 7, 10, 20]</code>.
+            </p>
+            
+            <div class="single-media">
+                <img src="media/pt1.7.png" alt="Image-to-image translation results">
+                <p><em>Image-to-image translation with different starting noise levels.</em></p>
+            </div>
+            
+            <p>
+                As <code>i_start</code> increases, the image becomes closer to the original Campanile.
+                This is because we are starting at a timestep closer to 0, where there is more image
+                signal and less noise.On the other hand, lower starting indices mean that we begin with a noisier image.
+                This gives the model more freedom to move around the image manifold. As the starting
+                index increases and the amount of noise decreases, the number of possible images that
+                fit the manifold is reduced, and the output increasingly resembles the Campanile.
+            </p>
+
+            Here are two images that use the same SDEdit procedure: 
+            <div class="single-media">
+                <img src="media/pt1.7_img1.png" alt="Image-to-image translation results">
+            </div>
+
+            <div class="single-media">
+                <img src="media/pt1.7_img2.png" alt="Image-to-image translation results">
+            </div>
+
+
+            <h3>1.7.1 Editing Hand-Drawn and Web Images</h3>
+            <p>This procedure works particularly well if we start with a nonrealistic image (e.g. painting, a sketch, some scribbles) 
+            and project it onto the natural image manifold.</p>
+
+            Here are couple web images edited using the above method for noise levels [1, 3, 5, 7, 10, 20]: 
+            <div class="single-media">
+                <img src="media/1.7.1_web.png" alt="Image-to-image translation Web Images results">
+            </div>
+
+            Here are couple hand drawn images edited using the above method for noise levels [1, 3, 5, 7, 10, 20]: 
+            <div class="single-media">
+                <img src="media/1.7.1_draw.png" alt="Image-to-image translation Drawing results">
+            </div>
+
+
+            <h4>1.7.2 Inpainting</h4>
+
+            <p>
+                Here, we only allow the diffusion model to change pixels inside a mask, while forcing
+                all pixels outside the mask to stay exactly the same as the original image (with the
+                appropriate amount of noise).
+            </p>
+            
+            <p>
+                We can use the same procedure to implement inpainting, following the RePaint paper.
+                We run the diffusion denoising loop, but at every step, after obtaining \( x_t \),
+                we force \( x_t \) to match the original image \( x_{\text{orig}} \) wherever the
+                mask \( \mathbf{m} \) is 0:
+            </p>
+            
+            <div>
+            \[
+            x_t \leftarrow \mathbf{m} \odot x_t + (1 - \mathbf{m}) \odot \text{forward}(x_{\text{orig}}, t)
+            \tag{A.5}
+            \]
+            </div>
+            
+            <p>
+                Here, we use the prompt <em>"a high quality photo"</em>.
+            </p>
+            
+            <div class="single-media">
+                <img src="media/pt1.7.2.png" alt="Inpainting results">
+                <p><em>Inpainting results using a fixed mask.</em></p>
+            </div>
+            
+            <h4>1.7.3 Text-Conditional Image-to-Image Translation</h4>
+            
+            <p>
+                Here, we do the same SDEdit-style image-to-image translation, but change the prompts
+                while keeping the same noise levels
+                <code>[1, 3, 5, 7, 10, 20]</code>.
+            </p>
+            
+            <div class="single-media">
+                <img src="media/1.7.3.png" alt="Text-conditional image-to-image translation">
+                <p><em>Text-conditional image-to-image translation at different noise levels.</em></p>
+            </div>
+            
+            <h4>1.8 Visual Anagrams</h4>
+
+            <p>
+                Here, we create visual anagrams and optical illusions using diffusion models.
+            </p>
+            
+            <p>
+                We denoise an image \( x_t \) at timestep \( t \) normally using prompt \( p_1 \),
+                which gives a noise estimate \( \epsilon_1 \). At the same time, we flip
+                \( x_t \) upside down and denoise it using a different prompt \( p_2 \), producing
+                a second noise estimate \( \epsilon_2 \).
+            </p>
+            
+            <p>
+                We then flip \( \epsilon_2 \) back, average the two noise estimates, and perform
+                a reverse diffusion step using this averaged noise estimate.
+            </p>
+            
+            <p>
+                The full algorithm is:
+            </p>
+            
+            <div>
+            \[
+            \epsilon_1 = \text{CFG}(\text{UNet}(x_t, t, p_1))
+            \]
+            
+            \[
+            \epsilon_2 = \text{flip}\big(\text{CFG}(\text{UNet}(\text{flip}(x_t), t, p_2))\big)
+            \]
+            
+            \[
+            \epsilon = \frac{\epsilon_1 + \epsilon_2}{2}
+            \]
+            </div>
+            
+            <p>
+                Here, UNet is the diffusion model from before, <code>flip()</code> is a function
+                that flips the image, and \( p_1 \) and \( p_2 \) are two different text prompt
+                embeddings. The final noise estimate used for denoising is \( \epsilon \).
+            </p>
+            <div class="single-media">
+                <img src="media/1.8.png" alt="Visual anagrams results">
+                <p><em>Visual anagrams generated using flipped denoising.</em></p>
+            </div>
+            
+            <h4>1.9 Hybrid Images</h4>
+            
+            <p>
+                Here, we implement factorized diffusion and create hybrid images, similar to what we
+                did in Project 2.
+            </p>
+            
+            <p>
+                To create hybrid images with a diffusion model, we use a similar idea to the visual
+                anagrams above. We construct a composite noise estimate \( \epsilon \) by estimating
+                noise using two different text prompts and then combining low-frequency components
+                from one noise estimate with high-frequency components from the other.
+            </p>
+            
+            <p>
+                The algorithm is:
+            </p>
+            
+            <div>
+            \[
+            \epsilon_1 = \text{CFG}(\text{UNet}(x_t, t, p_1))
+            \]
+            
+            \[
+            \epsilon_2 = \text{CFG}(\text{UNet}(x_t, t, p_2))
+            \]
+            
+            \[
+            \epsilon = f_{\text{lowpass}}(\epsilon_1) + f_{\text{highpass}}(\epsilon_2)
+            \]
+            </div>
+            
+            <p>
+                Here, UNet is the diffusion model UNet, \( f_{\text{lowpass}} \) is a low-pass filter,
+                \( f_{\text{highpass}} \) is a high-pass filter, and \( p_1 \) and \( p_2 \) are two
+                different text prompt embeddings. The final noise estimate used for denoising is
+                \( \epsilon \).
+            </p>
+            
+            <p>
+                We generate hybrid images by combining low-frequency components of the CFG noise
+                prediction from one prompt with high-frequency components from another, and then
+                using this combined noise estimate in the diffusion denoising process.
+            </p>
+            
+            <div class="single-media">
+                <img src="media/1.9.png" alt="Hybrid image results">
+                <p><em>Hybrid images generated using factorized diffusion.</em></p>
+            </div>
+            
+
+
+
+
+
+        </section>
+                    
+
+        <!-- Section B -->
+        <section id="partB">
+            <h2>Part B: Flow Matching from Scratch!</h2>
+
+        <h3>Part 1: Training a Single-Step Denoising UNet</h3>
+
+        <p>
+            Given a noisy image, we aim to train a denoiser that maps it back to a clean image.
+            To do this, we optimize an L2 loss:
+        </p>
+        
+        <div>
+        \[
+        \mathcal{L} = \mathbb{E}_{z, x}\left[ \| D_{\theta}(z) - x \|^2 \right]
+        \tag{B.1}
+        \]
+        </div>
+        
+        <h3>1.1 Implementing the UNet</h3>
+        
+        <p>
+            To implement the unconditional UNet, I followed the architecture shown below:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/unet1.png" alt="UNet architecture" style="max-width: 60%;">
+            <p><em>UNet architecture used for single-step denoising.</em></p>
+        </div>
+        
+        <p>
+            Below are the standard tensor operations used throughout the UNet:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/unet2.png" alt="UNet tensor operations" style="max-width: 60%;">
+            <p><em>Standard tensor operations used in the UNet.</em></p>
+        </div>
+        
+        <h3>1.2 Using the UNet to Train a Denoiser</h3>
+        
+        <p>
+            Here, I generated training data pairs of \( (x, z) \), where each \( x \) is a clean
+            MNIST digit. For each training batch, we generate \( z \) from \( x \) using the
+            following noising process:
+        </p>
+        
+        <div>
+        \[
+        z = x + \sigma \epsilon, \quad \text{where } \epsilon \sim \mathcal{N}(0, I).
+        \tag{B.2}
+        \]
+        </div>
+        
+        <p>
+            Below is a visualization of the noising process for
+            \( \sigma = [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0] \).
+            As \( \sigma \) increases, the amount of noise in each image also increases.
+        </p>
+        
+        <div class="single-media">
+            <img src="media/pt2.1.png" alt="MNIST noising visualization">
+            <p><em>Visualization of the noising process at different noise levels.</em></p>
+        </div>
+        
+
+        <h4>1.2.1 Training</h4>
+
+        <p>
+            Here, we train our model to perform denoising. Specifically, we denoise a noisy image
+            \( z \) that has noise with \( \sigma = 0.5 \) applied to the original clean image
+            \( x \).
+        </p>
+        
+        <ul>
+            <li>
+                The dataset is shuffled before creating the dataloader, and the model is trained
+                only on the training set.
+            </li>
+            <li>
+                Noise is applied after fetching samples from the dataloader. This allows the model
+                to see new noise at every iteration, which helps improve generalization.
+            </li>
+            <li>
+                We use a batch size of 256 and train the model for 5 epochs.
+            </li>
+            <li>
+                The hidden dimension is set to 128, and we use the Adam optimizer with a learning
+                rate of \( 1 \times 10^{-4} \).
+            </li>
+        </ul>
+        
+        <p>
+            The training curve is shown below:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/1.1.1_training.png"
+                 alt="Training loss curve"
+                 style="max-width: 40%;">
+            <p><em>Training loss over time.</em></p>
+        </div>
+        
+        <p>
+            At each epoch during training, I also display the clean test images, the corresponding
+            noisy images, and the denoised images produced by the model.
+        </p>
+        
+        <p>
+            Below are sample results on the test set with noise level \( \sigma = 0.5 \) after the
+            first and the fifth epochs:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/1.2.1_sample.png" alt="Denoising results after epoch 1 and 5">
+            <p><em>Sample denoising results after the first and fifth training epochs.</em></p>
+        </div>
+        
+
+        <h4>1.2.2 Out-of-Distribution Testing</h4>
+
+        <p>
+            We now test the model on noise levels that it was not trained on, in order to evaluate
+            its out-of-distribution (OOD) generalization ability. The model was trained using a
+            fixed noise level of \( \sigma = 0.5 \), so here we evaluate it on
+            \( \sigma = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0] \), excluding the training noise level.
+        </p>
+        
+        <p>
+            The results of this evaluation are shown below:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/1.7.2_OOD.png" alt="OOD denoising results" style="max-width: 50%;">
+            <p><em>OOD denoising results at unseen noise levels.</em></p>
+        </div>
+        
+        <h4>1.2.3 Denoising Pure Noise</h4>
+        
+        <p>
+            To turn denoising into a generative task, we would like the model to be able to denoise
+            pure random Gaussian noise. This can be viewed as starting from a blank canvas, where
+            \( z = \epsilon \) and \( \epsilon \sim \mathcal{N}(0, I) \), and then denoising it to
+            obtain a clean image.
+        </p>
+        
+        <p>
+            Below is the training loss curve for the denoising model:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/1.3_train.png" alt="Training curve" style="max-width: 40%;">>
+            <p><em>Training loss curve for the single-step denoising UNet.</em></p>
+        </div>
+        
+        <p>
+            Below are samples generated by denoising pure Gaussian noise:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/1.3_samples.png" alt="Samples from pure noise">
+            <p><em>Images generated by denoising pure noise.</em></p>
+        </div>
+        
+        <p>
+            <strong>Observations</strong> 
+            <p>
+                When trying to generate images from pure noise, the model does not do a good job of
+                producing clear, recognizable digits. However, the generated outputs often contain
+                rounded or curved shapes, which resemble digits such as 0, 5, 6, 8, and 9.
+                This happens because the model was trained only as a single-step denoiser and not as
+                a full generative diffusion model. During training, it learns to map noisy images back
+                toward the average structure of the training data, rather than learning how to
+                iteratively refine pure noise into a realistic sample. As a result, when starting from pure 
+                Gaussian noise, the model tends to produce
+                blurry, averaged features that reflect common patterns in the dataset. Since many
+                MNIST digits contain curved strokes, these features dominate the outputs, while
+                sharper, digit-specific details fail to emerge.
+                In other words, the model is minimizing reconstruction loss by predicting a
+                "mean-like" digit structure rather than sampling from the true data distribution.
+                Without iterative denoising steps or a noise-conditioned objective, the model lacks
+                the ability to generate diverse and well-formed digits from pure noise.
+            </p>
+        </p>
+        
+
+
+
+
+        <h3>Part 2: Flow Matching</h3>
+
+        <p>
+            One-step denoising does not work well for generative tasks. Instead,
+            we need to iteratively denoise images using flow matching. In this
+            approach, we train a UNet to predict the <em>flow</em> from noisy data to clean data,
+            allowing us to gradually transform noise into realistic images.
+        </p>
+        
+        <p>
+            Intermediate noisy samples are generated using a linear interpolation between pure
+            noise and clean images:
+        </p>
+        
+        <div>
+        \[
+        x_t = (1 - t)x_0 + t x_1, \quad \text{where } x_0 \sim \mathcal{N}(0, I), \; t \in [0, 1].
+        \tag{B.3}
+        \]
+        </div>
+        
+        <p>
+            Flow can be interpreted as the velocity of this transformation, describing how the
+            data moves through space over time:
+        </p>
+        
+        <div>
+        \[
+        u(x_t, t) = \frac{d}{dt} x_t = x_1 - x_0.
+        \tag{B.4}
+        \]
+        </div>
+        
+        <h4>2.1 Implementing a Time-Conditioned UNet</h4>
+        
+        <p>
+            Here, I implement a time-conditioned UNet and inject timestep information following
+            the architecture shown below.
+        </p>
+        
+        <div class="single-media">
+            <img src="media/conditioned_U-net.png" alt="Time-conditioned UNet architecture" style="max-width: 40%">
+            <p><em>Time-conditioned UNet architecture used for flow matching.</em></p>
+        </div>
+        
+        <h4>2.2 Training the UNet</h4>
+        
+        <p>
+            The training procedure follows the procedure below: 
+        </p>
+        
+        <div class="single-media">
+            <img src="media/train_alg.png" alt="Flow matching training algorithm" style="max-width: 40%">
+            <p><em>Training algorithm for flow matching.</em></p>
+        </div>
+        
+        <p>
+            We train a time-conditioned UNet to predict the flow given a noisy image and a timestep.
+            Training is performed on the MNIST training set only, using a batch size of 64, and
+            noise is added when batches are fetched from the dataloader.
+            The model uses a hidden dimension of \( D = 64 \), follows the architecture described above
+            for injecting timestep conditioning, and normalizes the timestep before
+            embedding it. Here I used Adam optimizer with an initial learning rate of
+            \( 10^{-2} \), along with an exponential learning rate decay applied after each epoch.
+        </p>
+        <div class="single-media">
+            <img src="media/2.3_train_conditioned.png" alt="Training curve for conditioned UNet" style="max-width: 40%">
+            <p><em>Training loss curve for the time-conditioned UNet.</em></p>
+        </div>
+
+
+        <h4>2.3 Sampling from the UNet</h4>
+
+        <p>
+          This is the sampling procedure used:
+        </p>
+        
+        <div class="single-media">
+          <img src="media/sampling_alg_used.png" alt="Sampling algorithm used">
+          <p><em>Sampling procedure used for the time-conditioned UNet.</em></p>
+        </div>
+        
+        <p>
+          Below are images sampled from the UNet after 1, 5, and 10 epochs of training.
+        </p>
+        
+        <div class="single-media">
+          <img src="media/samples_2.3.png" alt="Samples from epochs 1, 5, and 10">
+          <p><em>Samples generated after 1, 5, and 10 epochs.</em></p>
+        </div>
+        
+        <h4>2.4 Adding Class-Conditioning to the UNet</h4>
+
+        <p>
+            To improve sample quality and provide finer control over image generation, we extend
+            the UNet to condition on the digit class (0 to 9). We represent the class-conditioning
+            signal as a one-hot vector and inject it into the network using additional fully
+            connected layers, alongside the time-conditioning signal.
+        </p>
+        
+        <p>
+            To preserve the models ability to generate images without class information, we apply
+            classifier-free dropout by randomly removing the class-conditioning signal 10% of the
+            time during training. This allows the model to learn both conditional and unconditional
+            behaviors and enables classifier-free guidance at sampling time, giving us explicit
+            control over which digit is generated.
+        </p>
+        
+        <h4>2.5 Training the UNet</h4>
+        
+        <p>
+            Training is similar to the time-conditioned setup, with the main difference being the
+            inclusion of the class-conditioning vector and periodically performing unconditional
+            generation during training.
+        </p>
+        
+        <p>
+            The overall training procedure is summarized below:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/2.5_alg.png" alt="Class-conditioned training procedure" style="max-width: 40%"">
+            <p><em>Training procedure for the class-conditioned UNet.</em></p>
+        </div>
+        
+        <p>
+            The training loss curve is shown below:
+        </p>
+        
+        <div class="single-media">
+            <img src="media/2.4.png" alt="Training loss curve for class-conditioned UNet" style="max-width: 40%">
+            <p><em>Training loss curve for the class-conditioned UNet.</em></p>
+        </div>
+        
+        <h4>2.6 Sampling from the UNet</h4>
+        
+        <p>
+            Here, we sample images using class-conditioning and apply classifier-free guidance
+            with \( \gamma = 5 \).
+        </p>
+        
+        <p>
+            Below are samples generated at epochs 1, 5, and 10.
+        </p>
+        
+        <div class="single-media">
+            <img src="media/2.6_samples.png" alt="Class-conditioned samples">
+            <p><em>Class-conditioned samples generated at different training epochs.</em></p>
+        </div>
+        
+        <p>
+            To simplify training, we remove the exponential learning-rate scheduler and instead
+            use a fixed learning rate of \( 1 \times 10^{-3} \). This lower base learning rate
+            compensates for the lack of decay by maintaining stable optimization throughout
+            training. Even without the learning rate, we were able to get good results in the 
+            under 10 epochs. 
+        </p>
+        
+        <p>
+            Empirically, we observe comparable convergence behavior and sample quality, while
+            significantly reducing implementation complexity.
+        </p>
+        
+        <div class="single-media">
+            <img src="media/noscheduler.png" alt="Training results without learning rate scheduler">
+            <p><em>Results obtained without using a learning-rate scheduler.</em></p>
+        </div>
+    </section>
+        
+       
+
+
+        
+
+</body>
+</html>
