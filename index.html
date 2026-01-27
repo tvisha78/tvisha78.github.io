@@ -13,7 +13,7 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: auto;
             padding: 40px 20px;
             text-align: center;
@@ -22,7 +22,19 @@
         h1 {
             color: #0077cc;
             font-size: 36px;
-            margin-bottom: 60px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-bottom: 50px;
+            color: #555;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 50px;
+            justify-items: center;
         }
 
         .project-card {
@@ -30,12 +42,12 @@
             border-radius: 12px;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             padding: 30px 20px;
-            margin: 20px auto;
-            max-width: 500px;
-            transition: transform 0.3s, box-shadow 0.3s;
             text-decoration: none;
             color: #0077cc;
             display: block;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%;
+            max-width: 580px;
         }
 
         .project-card:hover {
@@ -53,30 +65,112 @@
             font-size: 16px;
             color: #555;
         }
+
+        .project-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Welcome to Tvisha's CS180 Portfolio!</h1>
-        <h3>This portfolio contains my CS180 projects from Fall 2025 and will be updated regularly throughout the semester.</h3>
+        <h3>This portfolio contains my CS180 projects from Fall 2025!</h3>
 
-        <a class="project-card" href="./proj0/index.html">
-            <h2>
-                Project 0<br>
-                <span style="font-weight: normal; font-size: 20px;">Becoming Friends with Your Camera</span>
-            </h2>
-            <img src="./media/proj0_thumbnail.png" alt="Project 0 Thumbnail" style="width:100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <p>Explore the relationship between perspective, focal length/zoom, and the center of projection through portraits, urban scenes, and the dolly zoom effect.</p>
-        </a>
+        <div class="projects-grid">
+            <a class="project-card" href="./proj0/index.html">
+                <h2>
+                    Project 0<br>
+                    <span style="font-weight: normal; font-size: 20px;">
+                        Becoming Friends with Your Camera
+                    </span>
+                </h2>
+                <img src="./media/proj0_thumbnail.png" alt="Project 0 Thumbnail">
+                <p>
+                    Explore the relationship between perspective, focal length, and the
+                    center of projection through portraits, urban scenes, and dolly zoom.
+                </p>
+            </a>
 
-        <a class="project-card" href="./proj1/index.html">
-            <h2>
-                Project 1<br>
-                <span style="font-weight: normal; font-size: 20px;">Images of the Russian Empire: Colorizing the Prokudin-Gorskii photo collection</span>
-            </h2>
-            <!-- <img src="./media/proj0_thumbnail.png" alt="Project 0 Thumbnail" style="width:100%; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);"> -->
-            <p>PROJECT DESCRIPTION.</p>
-        </a>
+            <a class="project-card" href="./proj1/index.html">
+                <h2>
+                    Project 1<br>
+                    <span style="font-weight: normal; font-size: 20px;">
+                        Colorizing the Prokudin-Gorskii Photo Collection
+                    </span>
+                </h2>
+                <img src="./media/proj1_front_image.png" alt="Project 1 Thumbnail">
+                <p>
+                    Align RGB channels of digitized images to reconstruct historical
+                    color photographs.
+                </p>
+            </a>
+
+            <a class="project-card" href="./proj2/index.html">
+                <h2>
+                    Project 2<br>
+                    <span style="font-weight: normal; font-size: 20px;">
+                        Fun with Filters and Frequencies!
+                    </span>
+                </h2>
+                <img src="./media/proj2_cover_img.png" alt="Project 2 Thumbnail">
+                <p>
+                    Image filtering, hybrid images, frequency-domain analysis, and 
+                    Multi-Resolution blending with Guassian and Laplacian stacks.
+                </p>
+            </a>
+
+            <a class="project-card" href="./proj3/index_proj3.html">
+                <h2>
+                    Project 3<br>
+                    <span style="font-weight: normal; font-size: 20px;">
+                        (Auto)stitching and Photo Mosaics
+                    </span>
+                </h2>
+                <img src="media/proj3_cover.png" alt="Project 3 Thumbnail">
+                <p>
+                    Manual image warping and mosaicing using recovered homographies and image
+                    blending. Automatic image stitching with Harris corner detection, feature
+                    matching, RANSAC-based homography estimation, and mosaic construction.
+                </p>
+            </a>
+
+            <a class="project-card" href="./proj4/index.html">
+                <h2>
+                    Project 4<br>
+                    <span style="font-weight: normal; font-size: 20px;">
+                        Neural Radiance Field!
+                    </span>
+                </h2>
+                <img src="media/proj4_cover.gif" alt="Project 4 Thumbnail">
+                <p>
+                    Calibrated a real camera and captured multi-view images of a physical object.
+                    Estimated camera intrinsics and poses using ArUco marker detection,
+                    undistorted and organized the dataset for 3D reconstruction, and trained
+                    a Neural Radiance Field (NeRF) to represent the object's 3D geometry and appearance.
+                </p>
+            </a>
+
+            <a class="project-card" href="./proj5/index5.html">
+                <h2>
+                    Project 5<br>
+                    <span style="font-weight: normal; font-size: 20px;">
+                        Fun with Diffusion! 
+                    </span>
+                </h2>
+                <img src="media/proj5_cover.png" alt="Project 5 Thumbnail">
+                <p>
+                    Diffusion-based generative modeling with classifier-free guidance (CFG) for
+                    text-to-image generation, image-to-image translation, and image editing
+                    (hand-drawn images, web images, and visual anagrams). Then implementing flow matching
+                    from scratch using denoising UNet and time-conditioned models for iterative
+                    image synthesis.
+                </p>
+            </a>
+        </div>
     </div>
 </body>
 </html>
